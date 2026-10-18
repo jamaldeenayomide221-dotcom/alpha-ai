@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALPHA AI</title>
+  <style>
+    * { box-sizing: border-box; }body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #08111f;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  max-width: 700px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #101c30;
+}
+
+header {
+  padding: 20px;
+  background: #142642;
+  border-bottom: 1px solid #29405e;
+}
+
+header h1 {
+  margin: 0;
+  color: #55c8ff;
+  font-size: 25px;
+}
+
+header p {
+  margin: 7px 0 0;
+  color: #b8c9df;
+  font-size: 13px;
+}
+
+#chat {
+  flex: 1;
+  padding: 18px;
+  overflow-y: auto;
+  min-height: 300px;
+}
+
+.message {
+  padding: 13px 15px;
+  margin-bottom: 14px;
+  border-radius: 15px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.bot {
+  background: #1b2d47;
+  border: 1px solid #2a4568;
+  margin-right: 25px;
+}
+
+.user {
+  background: #075ca8;
+  margin-left: 25px;
+}
+
+.label {
+  display: block;
+  font-size: 11px;
+  color: #7ed6ff;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-area {
+  padding: 15px;
+  background: #142642;
+  border-top: 1px solid #29405e;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #3b5575;
+  background: #091426;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  background: #0787e8;
+  color: white;
+  padding: 12px 17px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+.hint {
+  font-size: 11px;
+  color: #9eb2cb;
+  text-align: center;
+  margin-top: 12px;
+}
+
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>💙 ALPHA AI</h1>
+      <p>Your AI assistant for learning, ideas and everyday questions.</p>
+    </header><section id="chat" aria-live="polite">
+  <div class="message bot">
+    <span class="label">ALPHA AI</span>
+    Hello! 👋 Welcome to ALPHA AI.
+
+    You can ask me about mathematics, science, technology, history, writing and many other topics.
+
+    What would you like to learn today?
+  </div>
+</section>
+
+<div class="input-area">
+  <form id="chatForm" class="input-row">
+    <input id="userInput" type="text"
+      placeholder="Ask ALPHA AI anything..."
+      autocomplete="off" required>
+    <button id="sendButton" type="submit">Send</button>
+  </form>
+  <div class="hint">
+    ALPHA AI • Your ideas, your future 🚀
+  </div>
+</div>
+
+  </main>  <script>
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("userInput");
+    const chat = document.getElementById("chat");
+    const sendButton = document.getElementById("sendButton");
+
+    function addMessage(text, sender) {
+      const message = document.createElement("div");
+      message.className = "message " + sender;
+
+      const label = document.createElement("span");
+      label.className = "label";
+      label.textContent = sender === "user" ? "YOU" : "ALPHA AI";
+
+      const content = document.createElement("div");
+      content.textContent = text;
+
+      message.appendChild(label);
+      message.appendChild(content);
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const question = input.value.trim();
+      if (!question) return;
+
+      addMessage(question, "user");
+      input.value = "";
+
+      addMessage(
+        "Your chat interface is working! 🤖 I still need to be connected to an AI service before I can generate real answers. We're building that next!",
+        "bot"
+      );
+    });
+  </script></body>
+</html>
