@@ -1,0 +1,2 @@
+# alpha-ai
+ALPHA AI -  MY PERSONAL AI ASSISTANT 
