@@ -1,192 +1,487 @@
-<!DOCTYPE html><html lang="en">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ALPHA AI</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="ALPHA AI offline learning assistant with prepared lessons and maths tools.">
+  <title>ALPHA AI — Offline Knowledge Edition</title>
   <style>
-    * { box-sizing: border-box; }body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #08111f;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-}
-
-.app {
-  width: 100%;
-  max-width: 700px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #101c30;
-}
-
-header {
-  padding: 20px;
-  background: #142642;
-  border-bottom: 1px solid #29405e;
-}
-
-header h1 {
-  margin: 0;
-  color: #55c8ff;
-  font-size: 25px;
-}
-
-header p {
-  margin: 7px 0 0;
-  color: #b8c9df;
-  font-size: 13px;
-}
-
-#chat {
-  flex: 1;
-  padding: 18px;
-  overflow-y: auto;
-  min-height: 300px;
-}
-
-.message {
-  padding: 13px 15px;
-  margin-bottom: 14px;
-  border-radius: 15px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
-
-.bot {
-  background: #1b2d47;
-  border: 1px solid #2a4568;
-  margin-right: 25px;
-}
-
-.user {
-  background: #075ca8;
-  margin-left: 25px;
-}
-
-.label {
-  display: block;
-  font-size: 11px;
-  color: #7ed6ff;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.input-area {
-  padding: 15px;
-  background: #142642;
-  border-top: 1px solid #29405e;
-}
-
-.input-row {
-  display: flex;
-  gap: 8px;
-}
-
-input {
-  flex: 1;
-  min-width: 0;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #3b5575;
-  background: #091426;
-  color: white;
-  font-size: 16px;
-  outline: none;
-}
-
-button {
-  border: none;
-  border-radius: 12px;
-  background: #0787e8;
-  color: white;
-  padding: 12px 17px;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.6;
-}
-
-.hint {
-  font-size: 11px;
-  color: #9eb2cb;
-  text-align: center;
-  margin-top: 12px;
-}
+/* System fonts keep ALPHA AI fully usable offline. */
+:root{--bg:#090909;--panel:#101010;--panel2:#151515;--line:#28251e;--gold:#d9b56d;--gold2:#f2d99c;--text:#f5f1e8;--muted:#96928a;--soft:#c7c0b2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}button,textarea{font:inherit}button{cursor:pointer}.app-shell{display:flex;min-height:100vh}
+.sidebar{width:265px;background:#0c0c0c;border-right:1px solid #24211b;padding:25px 17px 17px;display:flex;flex-direction:column;flex-shrink:0}.brand{display:flex;align-items:center;gap:11px;padding:2px 7px 30px}.brand-mark{width:43px;height:43px;border:1px solid #9b7a3c;border-radius:13px;display:grid;place-items:center;font:800 27px Arial,Helvetica,sans-serif;color:var(--gold2);position:relative;background:linear-gradient(145deg,#252016,#0b0b0b);box-shadow:inset 0 0 20px #d9b56d12}.brand-mark span{font-size:11px;position:absolute;right:4px;top:3px;color:#fff0c4}.brand strong{font:800 16px Arial,Helvetica,sans-serif;letter-spacing:1.4px}.brand em,.mobile-brand span{font-style:normal;color:var(--gold)}.brand small{display:block;color:#777167;font-size:8px;letter-spacing:1.5px;margin-top:4px}.new-chat{border:1px solid #65502d;background:linear-gradient(110deg,#2a2112,#17140f);color:var(--gold2);border-radius:11px;padding:13px 12px;text-align:left;font-weight:600;display:flex;gap:10px;align-items:center}.new-chat span{font-size:12px}.side-label{font-size:9px;letter-spacing:1.7px;color:#6f6a60;margin:31px 9px 12px}.history-list{display:flex;flex-direction:column;gap:5px;overflow:auto}.history-item{border:0;background:transparent;color:#aaa49a;text-align:left;border-radius:8px;padding:10px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.history-item:hover,.history-item.active{background:#1b1915;color:var(--gold2)}.sidebar-bottom{margin-top:auto;border-top:1px solid #28251f;padding:17px 7px 4px;display:flex;gap:10px;align-items:center}.status-dot{width:8px;height:8px;border-radius:50%;background:#caa25a;box-shadow:0 0 10px #caa25a70}.sidebar-bottom strong{font-size:11px;display:block}.sidebar-bottom small{display:block;color:#827d73;font-size:10px;margin-top:4px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh;background:radial-gradient(ellipse at 50% 35%,#1b160d 0%,#0b0b0b 43%,#090909 80%)}.topbar{height:68px;border-bottom:1px solid #24211b;display:flex;align-items:center;justify-content:space-between;padding:0 28px}.topbar-right{display:flex;align-items:center;gap:13px}.secure-pill{font-size:9px;letter-spacing:1.3px;color:#c8b88f;border:1px solid #393021;border-radius:20px;padding:7px 11px;display:flex;align-items:center;gap:7px}.secure-pill i{width:5px;height:5px;border-radius:50%;background:#d7b568}.icon-btn{background:transparent;border:1px solid #302b22;color:#c6b88f;border-radius:9px;width:35px;height:35px;font-size:18px}.menu-btn,.mobile-brand{display:none}.conversation{width:min(850px,100%);margin:0 auto;flex:1;padding:48px 32px 25px;display:flex;flex-direction:column;min-height:0}.welcome{margin:auto 0;width:100%;padding:12px 0 28px}.welcome-symbol{width:69px;height:69px;margin:0 auto 25px;border:1px solid #846a3c;border-radius:23px;display:grid;place-items:center;position:relative;background:linear-gradient(145deg,#2a2112,#11100d);box-shadow:0 0 55px #d9b56d10,inset 0 0 25px #d9b56d0c;font:800 38px Arial,Helvetica,sans-serif;color:var(--gold2)}.welcome-symbol b{position:absolute;right:9px;top:5px;font-size:14px;color:white}.eyebrow{text-align:center;color:#b49a65;font-size:9px;letter-spacing:2.8px;font-weight:700}.welcome h1{text-align:center;font:800 clamp(38px,5vw,56px)/1.13 Arial,Helvetica,sans-serif;letter-spacing:-2.5px;margin:17px 0 15px}.welcome h1 span{color:var(--gold2)}.welcome>p{max-width:430px;text-align:center;color:#a5a096;line-height:1.7;font-size:13px;margin:0 auto 34px}.suggestion-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:570px;margin:auto}.suggestion{position:relative;min-height:89px;border:1px solid #2e2a22;border-radius:13px;background:linear-gradient(135deg,#171510,#111);padding:16px 15px;text-align:left;color:var(--text);transition:.2s}.suggestion:hover{border-color:#8a6d39;transform:translateY(-2px);background:#1c1810}.suggestion>span{color:var(--gold);font-size:17px;float:left;width:27px}.suggestion b{font-size:12px;display:block;font-weight:600;margin:1px 20px 6px 27px}.suggestion small{font-size:10px;color:#8f897d;display:block;margin-left:27px}.suggestion i{position:absolute;right:13px;top:14px;color:#78633e;font-style:normal;font-size:13px}.messages{display:flex;flex-direction:column;gap:23px;padding-bottom:10px}
+.bubble{white-space:pre-wrap}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+@media(max-width:700px){.conversation{padding-bottom:20px}.composer-wrap{padding-bottom:calc(13px + env(safe-area-inset-bottom))}.topbar{padding-top:env(safe-area-inset-top)}}.message{display:flex;gap:12px;max-width:100%;align-items:flex-start}.message.user{flex-direction:row-reverse}.avatar{width:31px;height:31px;flex:0 0 31px;border:1px solid #55452a;background:#211b10;border-radius:10px;display:grid;place-items:center;color:var(--gold2);font:700 12px Arial,Helvetica,sans-serif}.message.user .avatar{background:#252525;border-color:#3c3c3c;color:#e7e1d5}.bubble{max-width:calc(100% - 45px);padding:13px 16px;border:1px solid #2b2924;background:#121212;border-radius:4px 14px 14px 14px;font-size:13px;line-height:1.75;color:#e6e0d5;overflow-wrap:anywhere;white-space:pre-wrap}.message.user .bubble{background:#241e12;border-color:#514128;border-radius:14px 4px 14px 14px}.bubble .thinking{color:var(--gold);animation:pulse 1s infinite alternate}@keyframes pulse{to{opacity:.35}}.composer-wrap{width:min(850px,100%);margin:0 auto;padding:0 32px 20px}.composer{display:flex;align-items:flex-end;gap:10px;border:1px solid #4b3b24;background:#12110f;border-radius:15px;padding:10px 10px 10px 17px;box-shadow:0 8px 35px #0008}.composer:focus-within{border-color:#9a7841}.composer textarea{resize:none;max-height:150px;min-height:27px;flex:1;background:transparent;color:var(--text);border:0;outline:0;padding:5px 0;font-size:13px;line-height:1.5}.composer textarea::placeholder{color:#777166}.send-btn{width:35px;height:35px;border:0;border-radius:10px;background:linear-gradient(135deg,#f0d99d,#b88d43);color:#17120a;font-size:23px;font-weight:700;line-height:1}.send-btn:disabled{opacity:.45;cursor:wait}.composer-meta{display:flex;justify-content:space-between;gap:12px;color:#6f6a61;font-size:9px;padding:11px 4px 0}.composer-meta b{color:var(--gold)}.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);background:#272116;border:1px solid #70582f;color:#f0d99d;border-radius:9px;padding:11px 16px;font-size:12px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:700px){.sidebar{position:fixed;z-index:5;inset:0 auto 0 0;width:270px;transform:translateX(-102%);transition:transform .25s;box-shadow:20px 0 50px #0008}.sidebar.open{transform:translateX(0)}.topbar{height:59px;padding:0 15px}.menu-btn{display:block}.mobile-brand{display:block;font:800 13px Arial,Helvetica,sans-serif;letter-spacing:1px;margin-right:auto;margin-left:12px}.secure-pill{font-size:8px;padding:6px 8px}.topbar-right{gap:8px}.conversation{padding:27px 17px 18px}.welcome-symbol{width:58px;height:58px;border-radius:19px;font-size:32px;margin-bottom:20px}.welcome h1{font-size:42px;letter-spacing:-1.8px}.welcome>p{font-size:12px;margin-bottom:27px}.suggestion-grid{gap:8px}.suggestion{padding:13px 10px;min-height:86px}.suggestion b{font-size:11px}.suggestion small{font-size:9px}.composer-wrap{padding:0 12px 13px}.composer-meta{font-size:8px}.composer-meta span:last-child{max-width:53%;text-align:right}.bubble{font-size:12px;padding:11px 13px}.message{gap:8px}.avatar{width:28px;height:28px;flex-basis:28px}.messages{gap:17px}}
+@media(max-width:360px){.suggestion-grid{grid-template-columns:1fr}.suggestion{min-height:68px}.welcome h1{font-size:36px}.secure-pill{display:none}}
 
   </style>
 </head>
 <body>
-  <main class="app">
-    <header>
-      <h1>💙 ALPHA AI</h1>
-      <p>Your AI assistant for learning, ideas and everyday questions.</p>
-    </header><section id="chat" aria-live="polite">
-  <div class="message bot">
-    <span class="label">ALPHA AI</span>
-    Hello! 👋 Welcome to ALPHA AI.
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">A<span>✦</span></div>
+        <div><strong>ALPHA <em>AI</em></strong><small>YOUR SMARTER SIDEKICK</small></div>
+      </div>
+      <button class="new-chat" id="newChat">＋ <span>New conversation</span></button>
+      <div class="side-label">RECENT CHATS</div>
+      <div id="historyList" class="history-list"></div>
+      <div class="sidebar-bottom">
+        <div class="status-dot"></div>
+        <div><strong>ALPHA AI</strong><small id="connectionLabel">Online AI + offline backup</small></div>
+      </div>
+    </aside>
 
-    You can ask me about mathematics, science, technology, history, writing and many other topics.
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        <div class="mobile-brand">ALPHA <span>AI</span></div>
+        <div class="topbar-right"><span class="secure-pill" id="modePill"><i></i> AI READY</span><button class="icon-btn" id="exportBtn" title="Export conversation" aria-label="Export conversation">⇩</button><button class="icon-btn" id="clearBtn" title="Clear conversation" aria-label="Clear conversation">↻</button></div>
+      </header>
 
-    What would you like to learn today?
+      <section class="conversation" id="conversation">
+        <div class="welcome" id="welcome">
+          <div class="welcome-symbol"><span>A</span><b>✦</b></div>
+          <div class="eyebrow">WELCOME TO YOUR AI SPACE</div>
+          <h1>Think bigger.<br><span>Ask ALPHA.</span></h1>
+          <p>Ask questions across school subjects, coding and everyday topics. Online AI is available when hosted with its secure backend; prepared offline answers remain available without internet.</p>
+          <div class="suggestion-grid">
+            <button class="suggestion" data-prompt="Explain photosynthesis in simple steps."><span>✧</span><b>Biology</b><small>Learn about living things</small><i>↗</i></button>
+            <button class="suggestion" data-prompt="Solve 2x + 3 = 11 step by step."><span>∑</span><b>Mathematics</b><small>Arithmetic and algebra help</small><i>↗</i></button>
+            <button class="suggestion" data-prompt="Explain Newton’s three laws of motion."><span>⌘</span><b>Physics</b><small>Understand forces and motion</small><i>↗</i></button>
+            <button class="suggestion" data-prompt="Teach me HTML, CSS and JavaScript basics."><span>✳</span><b>Coding</b><small>Learn to build websites</small><i>↗</i></button>
+          </div>
+        </div>
+        <div id="messages" class="messages" aria-live="polite"></div>
+      </section>
+
+      <footer class="composer-wrap">
+        <form id="chatForm" class="composer">
+          <textarea id="messageInput" rows="1" maxlength="8000" placeholder="Message ALPHA AI…" aria-label="Your message"></textarea>
+          <button id="sendBtn" class="send-btn" type="submit" aria-label="Send message">↑</button>
+        </form>
+        <div class="composer-meta"><span><b>✦</b> Curious minds start here.</span><span>Online AI when hosted · Offline backup always available</span></div>
+      </footer>
+    </main>
   </div>
-</section>
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+const form = document.getElementById('chatForm');
+const input = document.getElementById('messageInput');
+const messagesEl = document.getElementById('messages');
+const welcome = document.getElementById('welcome');
+const sendBtn = document.getElementById('sendBtn');
+const toast = document.getElementById('toast');
+const historyList = document.getElementById('historyList');
+const connectionLabel = document.getElementById('connectionLabel');
+let chats = [];
+try { const savedChats = JSON.parse(localStorage.getItem('alpha-ai-chats') || '[]'); if (Array.isArray(savedChats)) chats = savedChats; } catch (e) { chats = []; }
+let currentChat = { id: Date.now(), title: 'New conversation', messages: [] };
+let busy = false;
+let storageWarningShown = false;
+const modePill = document.getElementById('modePill');
+function setMode(label, online) {
+  connectionLabel.textContent = label;
+  if (modePill) modePill.lastChild.textContent = online ? ' ONLINE AI' : ' OFFLINE BACKUP';
+}
 
-<div class="input-area">
-  <form id="chatForm" class="input-row">
-    <input id="userInput" type="text"
-      placeholder="Ask ALPHA AI anything..."
-      autocomplete="off" required>
-    <button id="sendButton" type="submit">Send</button>
-  </form>
-  <div class="hint">
-    ALPHA AI • Your ideas, your future 🚀
-  </div>
-</div>
-
-  </main>  <script>
-    const form = document.getElementById("chatForm");
-    const input = document.getElementById("userInput");
-    const chat = document.getElementById("chat");
-    const sendButton = document.getElementById("sendButton");
-
-    function addMessage(text, sender) {
-      const message = document.createElement("div");
-      message.className = "message " + sender;
-
-      const label = document.createElement("span");
-      label.className = "label";
-      label.textContent = sender === "user" ? "YOU" : "ALPHA AI";
-
-      const content = document.createElement("div");
-      content.textContent = text;
-
-      message.appendChild(label);
-      message.appendChild(content);
-      chat.appendChild(message);
-      chat.scrollTop = chat.scrollHeight;
+function showToast(text) {
+  toast.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+function saveChats() {
+  const all = chats.filter(c => c.id !== currentChat.id);
+  if (currentChat.messages.length) all.unshift(currentChat);
+  chats = all.slice(0, 20);
+  try { localStorage.setItem('alpha-ai-chats', JSON.stringify(chats)); }
+  catch (e) {
+    if (!storageWarningShown) {
+      storageWarningShown = true;
+      showToast('This browser session does not allow saved history. Your current chat will still work.');
     }
+  }
+  renderHistory();
+}
+function renderHistory() {
+  historyList.innerHTML = '';
+  chats.forEach(chat => {
+    const btn = document.createElement('button');
+    btn.className = 'history-item';
+    btn.textContent = chat.title || 'Conversation';
+    btn.title = btn.textContent;
+    btn.onclick = () => loadChat(chat.id);
+    historyList.appendChild(btn);
+  });
+}
+function loadChat(id) {
+  const found = chats.find(c => c.id === id);
+  if (!found) return;
+  currentChat = JSON.parse(JSON.stringify(found));
+  renderMessages();
+  document.getElementById('sidebar').classList.remove('open');
+}
+function newChat() {
+  currentChat = { id: Date.now(), title: 'New conversation', messages: [] };
+  renderMessages();
+  input.focus();
+}
+function renderMessages() {
+  messagesEl.innerHTML = '';
+  welcome.style.display = currentChat.messages.length ? 'none' : '';
+  currentChat.messages.forEach(m => addMessage(m.role, m.content, false));
+}
+function addMessage(role, content, persist = true) {
+  const row = document.createElement('div');
+  row.className = 'message ' + (role === 'user' ? 'user' : 'assistant');
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = role === 'user' ? 'Y' : 'A';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = content;
+  row.append(avatar, bubble);
+  messagesEl.appendChild(row);
+  if (persist) {
+    currentChat.messages.push({ role, content });
+    if (role === 'user' && currentChat.messages.length === 1) {
+      currentChat.title = content.slice(0, 34) + (content.length > 34 ? '…' : '');
+    }
+    saveChats();
+  }
+  messagesEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  return bubble;
+}
+function setBusy(value) {
+  busy = value;
+  sendBtn.disabled = value;
+  input.disabled = value;
+}
 
-    form.addEventListener("submit", function(event) {
-      event.preventDefault();
+function tokenizeExpression(source) {
+  const cleaned = source.replace(/,/g, '').replace(/[×x]/g, '*').replace(/÷/g, '/').replace(/[−–]/g, '-').replace(/\s+/g, '');
+  const tokens = cleaned.match(/\d+(?:\.\d+)?|[()+\-*/^%]/g) || [];
+  if (tokens.join('') !== cleaned || !tokens.length) return null;
+  return tokens;
+}
+function parseArithmetic(source) {
+  const tokens = tokenizeExpression(source);
+  if (!tokens) return null;
+  let i = 0;
+  function primary() {
+    const t = tokens[i++];
+    if (t === '(') {
+      const value = addSub();
+      if (tokens[i++] !== ')') throw Error('Missing closing bracket');
+      let out = value;
+      while (tokens[i] === '%') { out /= 100; i++; }
+      return out;
+    }
+    if (t === undefined) throw Error('Missing value');
+    if (/^\d/.test(t)) {
+      let out = Number(t);
+      while (tokens[i] === '%') { out /= 100; i++; }
+      return out;
+    }
+    throw Error('Expected a number');
+  }
+  function unary() {
+    if (tokens[i] === '+') { i++; return unary(); }
+    if (tokens[i] === '-') { i++; return -unary(); }
+    return primary();
+  }
+  function power() {
+    let left = unary();
+    if (tokens[i] === '^') { i++; left = Math.pow(left, power()); }
+    return left;
+  }
+  function mulDiv() {
+    let left = power();
+    while (tokens[i] === '*' || tokens[i] === '/') {
+      const op = tokens[i++], right = power();
+      if (op === '/' && right === 0) throw Error('Division by zero');
+      left = op === '*' ? left * right : left / right;
+    }
+    return left;
+  }
+  function addSub() {
+    let left = mulDiv();
+    while (tokens[i] === '+' || tokens[i] === '-') {
+      const op = tokens[i++], right = mulDiv();
+      left = op === '+' ? left + right : left - right;
+    }
+    return left;
+  }
+  try {
+    const result = addSub();
+    if (i !== tokens.length || !Number.isFinite(result) || Math.abs(result) > 1e15) return null;
+    return result;
+  } catch (e) { return null; }
+}
+function formatNumber(n) {
+  if (Math.abs(n) < 1e-10) n = 0;
+  return Number.isInteger(n) ? String(n) : String(Number(n.toFixed(8)));
+}
+function solveLinearEquation(message) {
+  let raw = message.replace(/[×]/g, '*').replace(/[−–]/g, '-').replace(/\bsolve\b|\bfind\b|\bfor x\b/gi, ' ');
+  const eq = raw.match(/([0-9xX().+\-*/\s]+)=([0-9xX().+\-*/\s]+)/);
+  if (!eq || !/[xX]/.test(eq[1] + eq[2])) return null;
+  function parseSide(source) {
+    let s = source.toLowerCase().replace(/\s+/g, '');
+    s = s.replace(/(\d|\))(?=x|\()/g, '$1*').replace(/x(?=\d|\()/g, 'x*').replace(/\)(?=x)/g, ')*');
+    const tokens = s.match(/\d+(?:\.\d+)?|x|[()+\-*/]/g) || [];
+    if (tokens.join('') !== s) throw Error('Invalid expression');
+    let i = 0;
+    const add = (u,v)=>({a:u.a+v.a,b:u.b+v.b});
+    const sub = (u,v)=>({a:u.a-v.a,b:u.b-v.b});
+    function factor() {
+      if (tokens[i] === '+') { i++; return factor(); }
+      if (tokens[i] === '-') { i++; const v=factor(); return {a:-v.a,b:-v.b}; }
+      const t=tokens[i++];
+      if (t === '(') { const v=expr(); if(tokens[i++]!==')') throw Error('Bracket'); return v; }
+      if (t === 'x') return {a:1,b:0};
+      if (t && /^\d/.test(t)) return {a:0,b:Number(t)};
+      throw Error('Term');
+    }
+    function term() {
+      let v=factor();
+      while(tokens[i]==='*'||tokens[i]==='/') {
+        const op=tokens[i++], w=factor();
+        if(op==='*') {
+          if(v.a!==0 && w.a!==0) throw Error('Not linear');
+          v = v.a!==0 ? {a:v.a*w.b,b:v.b*w.b} : {a:w.a*v.b,b:w.b*v.b};
+        } else {
+          if(w.a!==0 || w.b===0) throw Error('Invalid divisor');
+          v={a:v.a/w.b,b:v.b/w.b};
+        }
+      }
+      return v;
+    }
+    function expr() {
+      let v=term();
+      while(tokens[i]==='+'||tokens[i]==='-') { const op=tokens[i++],w=term(); v=op==='+'?add(v,w):sub(v,w); }
+      return v;
+    }
+    const value=expr(); if(i!==tokens.length) throw Error('Extra tokens'); return value;
+  }
+  try {
+    const L=parseSide(eq[1]), R=parseSide(eq[2]);
+    const coefficient=L.a-R.a, constant=R.b-L.b;
+    if (Math.abs(coefficient)<1e-12) {
+      return Math.abs(constant)<1e-12 ? 'Both sides are equal for every value of x.' : 'This equation has no solution because the x terms cancel but the constants are different.';
+    }
+    const x=constant/coefficient;
+    if(!Number.isFinite(x)) return null;
+    const sign = constant < 0 ? '−' : '';
+    return 'ALGEBRA — SOLVING FOR x\nEquation: '+eq[1].trim()+' = '+eq[2].trim()+'\n\nStep 1: Collect the x terms on one side and the number terms on the other.\nStep 2: Simplify to '+formatNumber(coefficient)+'x = '+formatNumber(constant)+'.\nStep 3: Divide both sides by '+formatNumber(coefficient)+'.\n\nAnswer: x = '+formatNumber(x)+'\n\nCheck: Substitute x into the original equation to confirm both sides have the same value.';
+  } catch(e) { return null; }
+}
+function mathReply(message) {
+  const linear = solveLinearEquation(message);
+  if (linear) return linear;
+  const percent = message.match(/(?:what is|calculate|find)?\s*(\d+(?:\.\d+)?)\s*%\s*(?:of)\s*(\d+(?:\.\d+)?)/i);
+  if (percent) {
+    const result=Number(percent[1])*Number(percent[2])/100;
+    return 'PERCENTAGES\n'+percent[1]+'% of '+percent[2]+'\n= ('+percent[1]+' ÷ 100) × '+percent[2]+'\n= '+formatNumber(result);
+  }
+  let expr = message.trim().replace(/^(please\s+)?(what is|calculate|evaluate|work out|find the value of|solve)\s*/i,'').replace(/[?=]+$/,'').trim();
+  expr = expr.replace(/\bplus\b/gi,'+').replace(/\bminus\b/gi,'-').replace(/\btimes\b/gi,'*').replace(/\bmultiplied by\b/gi,'*').replace(/\bdivided by\b/gi,'/');
+  if (!/[+*/^%]/.test(expr) && !/\d\s*-\s*\d/.test(expr)) return null;
+  const value=parseArithmetic(expr);
+  if(value===null) return null;
+  return 'MATHEMATICS — CALCULATION\nExpression: '+expr+'\nAnswer: '+formatNumber(value)+'\n\nMethod: Follow BODMAS/PEMDAS — brackets first, then powers, then multiplication or division from left to right, and finally addition or subtraction from left to right.';
+}
+const OFFLINE_TOPICS = [
+  {p:/\bmean\b|\bmedian\b|\bmode\b|average of numbers/, a:'MATHEMATICS — MEAN, MEDIAN AND MODE\nMean: add all values and divide by the number of values. Median: arrange values in order and choose the middle value (or average the two middle values if there are an even number). Mode: the value that occurs most often. Example: for 2, 3, 3, 7, the mean is 3.75, median is 3 and mode is 3.'},
+  {p:/\bprobability\b|chance of an event/, a:'MATHEMATICS — PROBABILITY\nProbability measures how likely an event is. For equally likely outcomes: probability = number of favourable outcomes ÷ total number of possible outcomes. It ranges from 0 (impossible) to 1 (certain). Example: the probability of rolling a 4 on a fair six-sided die is 1/6.'},
+  {p:/\bratio\b|proportion/, a:'MATHEMATICS — RATIO AND PROPORTION\nA ratio compares quantities by division. The ratio 2:3 means two parts compared with three parts. Simplify a ratio by dividing every part by the same common factor. A proportion states that two ratios are equal. Keep units consistent when comparing quantities.'},
+  {p:/\bfraction\b|numerator|denominator/, a:'MATHEMATICS — FRACTIONS\nA fraction represents part of a whole. The numerator is the top number and the denominator is the bottom number. To add or subtract fractions, first use a common denominator. To multiply fractions, multiply numerators and denominators. To divide by a fraction, multiply by its reciprocal. Simplify the final fraction when possible.'},
+  {p:/pythagorean|pythagoras|right.?angled triangle/, a:'MATHEMATICS — PYTHAGORAS’ THEOREM\nFor a right-angled triangle, the square of the hypotenuse equals the sum of the squares of the other two sides: a² + b² = c², where c is the hypotenuse (the side opposite the right angle). Example: if the shorter sides are 3 cm and 4 cm, c² = 9 + 16 = 25, so c = 5 cm.'},
+  {p:/area|perimeter|circumference/, a:'MATHEMATICS — AREA AND PERIMETER\nPerimeter is the total distance around a 2D shape. Area is the space inside it. Common formulas:\n• Rectangle: area = length × width; perimeter = 2(length + width).\n• Triangle: area = ½ × base × perpendicular height.\n• Circle: circumference = 2πr; area = πr².\nUse the correct units: perimeter in units such as cm, area in square units such as cm².'},
+  {p:/simple interest|\binterest\b/, a:'MATHEMATICS — SIMPLE INTEREST\nSimple interest is calculated only on the original principal. Formula: I = (P × R × T) ÷ 100, where P is principal, R is annual rate percent and T is time in years. Amount = principal + interest. Make sure the rate and time use matching units.'},
+  {p:/laws of indices|\bindices\b|index laws|exponent rules/, a:'MATHEMATICS — LAWS OF INDICES\nFor the same non-zero base: aᵐ × aⁿ = aᵐ⁺ⁿ; aᵐ ÷ aⁿ = aᵐ⁻ⁿ; (aᵐ)ⁿ = aᵐⁿ; a⁰ = 1 for a ≠ 0; and a⁻ⁿ = 1/aⁿ. Apply the rules only when the bases match as required.'},
+  {p:/quadratic equation|quadratic formula|quadratic/, a:'MATHEMATICS — QUADRATIC EQUATIONS\nA quadratic equation has the form ax² + bx + c = 0, where a is not zero. The quadratic formula is x = (−b ± √(b² − 4ac)) ÷ (2a). The expression b² − 4ac is the discriminant; it helps determine the type of roots. Substitute the values of a, b and c carefully, including their signs.'},
+  {p:/simultaneous equations|systems of equations/, a:'MATHEMATICS — SIMULTANEOUS EQUATIONS\nSimultaneous equations are two or more equations that share the same unknowns. Common school methods are substitution and elimination. The solution must satisfy every equation. This offline edition can solve many simple single-variable linear equations; for a pair of simultaneous equations, send the exact question and I can explain the method if it matches a prepared example.'},
+  {p:/trigonometry|sine|cosine|tangent|\bsin\b|\bcos\b|\btan\b/, a:'MATHEMATICS — BASIC TRIGONOMETRY\nFor an angle θ in a right-angled triangle: sin θ = opposite ÷ hypotenuse; cos θ = adjacent ÷ hypotenuse; tan θ = opposite ÷ adjacent. A memory aid is SOH–CAH–TOA. Check that your calculator is in the correct angle mode (degrees or radians).'},
+  {p:/\bbodmas\b|pemdas|order of operations/, a:'MATHEMATICS — BODMAS / ORDER OF OPERATIONS\nBODMAS means Brackets, Orders (powers and roots), Division and Multiplication, Addition and Subtraction. Multiplication and division have equal priority, so work from left to right. Addition and subtraction also have equal priority, so work from left to right.'},
+  {p:/\bwork\b|work done|\bpower\b/, a:'PHYSICS — WORK AND POWER\nWork is done when a force causes displacement in its direction. For a constant force along the direction of motion: work = force × distance. Work is measured in joules (J). Power is the rate of doing work: power = work ÷ time, measured in watts (W).'},
+  {p:/\bphotosynthesis\b|how do plants make food/, a:'BIOLOGY — PHOTOSYNTHESIS 🌱\nPhotosynthesis is the process by which green plants make glucose (food) using light energy. It mainly takes place in chloroplasts, which contain chlorophyll.\n\nPlants need:\n• Light energy from the Sun\n• Water absorbed by roots\n• Carbon dioxide entering through leaf stomata\n\nThey produce glucose and release oxygen.\nWord equation: carbon dioxide + water → glucose + oxygen (in the presence of light and chlorophyll).'},
+  {p:/\bcell theory\b|\bcell\b|organelles|cell membrane|cytoplasm|nucleus/, a:'BIOLOGY — THE CELL 🔬\nA cell is the basic structural and functional unit of life. Cell theory states that living organisms are made of cells, the cell is the basic unit of life, and new cells arise from existing cells.\n\nMain structures:\n• Cell membrane: controls movement into and out of the cell.\n• Cytoplasm: where many chemical reactions occur.\n• Nucleus: contains DNA and helps control cell activities.\n• Mitochondria: site of most aerobic respiration.\n• Ribosomes: make proteins.\n• Plant cells also have a cellulose cell wall, chloroplasts and a large permanent vacuole.'},
+  {p:/\bmitosis\b|\bmeiosis\b|cell division/, a:'BIOLOGY — CELL DIVISION\nMitosis produces two daughter cells that are genetically very similar to the parent cell and usually have the same chromosome number. It is important for growth and repair. Meiosis involves two divisions and produces four cells with half the chromosome number; it helps form gametes for sexual reproduction.\nA key difference: mitosis maintains chromosome number, while meiosis halves it.'},
+  {p:/\brespiration\b|cellular respiration/, a:'BIOLOGY — RESPIRATION\nCellular respiration releases energy from glucose for cell activities. Aerobic respiration uses oxygen and mainly takes place in mitochondria.\nWord equation: glucose + oxygen → carbon dioxide + water + energy.\nAnaerobic respiration occurs without oxygen and releases less energy per glucose molecule.'},
+  {p:/\becology\b|\becosystem\b|food chain|food web|habitat|population in biology/, a:'BIOLOGY — ECOLOGY 🌍\nEcology is the study of relationships between organisms and their environment. A habitat is where an organism lives. A population is members of one species in an area; a community is all the populations there; an ecosystem includes the community and non-living environment.\nA food chain shows energy transfer, for example: grass → grasshopper → frog → snake. Green plants are producers; animals are consumers; decomposers break down dead material.'},
+  {p:/classification of living|taxonomy|binomial nomenclature|five kingdoms/, a:'BIOLOGY — CLASSIFICATION\nClassification groups organisms according to shared characteristics and evolutionary relationships. The main taxonomic ranks are domain, kingdom, phylum, class, order, family, genus and species. Binomial nomenclature gives each species a two-part scientific name: Genus followed by species, for example Homo sapiens.'},
+  {p:/nutrition|balanced diet|carbohydrate|protein|vitamin|mineral/, a:'BIOLOGY — NUTRITION\nNutrition is the process of obtaining and using food. A balanced diet supplies appropriate amounts of carbohydrates, proteins, fats, vitamins, minerals, fibre and water. Carbohydrates are a major energy source; proteins support growth and repair; fats store energy and help with insulation. Vitamins and minerals support normal body functions. Nutritional needs vary between people.'},
+  {p:/digestive system|digestion|small intestine|stomach/, a:'BIOLOGY — DIGESTION\nDigestion breaks large, insoluble food molecules into smaller, soluble molecules that can be absorbed. The mouth chews food and saliva begins starch digestion. The stomach churns food and uses acid and enzymes. Most digestion and nutrient absorption occur in the small intestine. The large intestine absorbs much of the remaining water.'},
+  {p:/blood|red blood cell|white blood cell|platelet/, a:'BIOLOGY — BLOOD\nBlood consists of plasma, red blood cells, white blood cells and platelets. Plasma transports dissolved substances. Red blood cells contain haemoglobin, which carries oxygen. White blood cells help defend the body against infection. Platelets help blood clot.'},
+  {p:/human heart|heart|circulatory system|double circulation/, a:'BIOLOGY — THE HEART AND CIRCULATION\nThe heart is a muscular organ that pumps blood. The right side sends blood to the lungs for gas exchange; the left side sends oxygen-rich blood to the rest of the body. Arteries carry blood away from the heart, veins carry blood towards it, and capillaries allow exchange with tissues.'},
+  {p:/kidney|kidneys|excretion|urinary system/, a:'BIOLOGY — EXCRETION AND KIDNEYS\nExcretion is the removal of metabolic waste products. The kidneys filter blood, regulate water and salt balance, and remove urea in urine. Urine travels from the kidneys through the ureters to the bladder and leaves through the urethra.'},
+  {p:/reproduction|fertilization|fertilisation|pollination/, a:'BIOLOGY — REPRODUCTION\nReproduction is the process by which organisms produce offspring. Asexual reproduction involves one parent and no fusion of gametes; offspring are usually genetically very similar. Sexual reproduction involves fusion of male and female gametes and produces genetic variation. In flowering plants, pollination is the transfer of pollen from anther to stigma.'},
+  {p:/genetics|heredity|gene|chromosome|dominant|recessive/, a:'BIOLOGY — GENETICS\nGenetics is the study of heredity and variation. Genes are sections of DNA that influence inherited characteristics. Genes are carried on chromosomes. An allele is a version of a gene. In a simple dominant/recessive model, a dominant allele can affect the phenotype when one copy is present, while a recessive trait usually appears only when two recessive alleles are inherited.'},
+  {p:/malaria/, a:'BIOLOGY — MALARIA\nMalaria is an infectious disease caused by Plasmodium parasites and transmitted mainly by bites from infected female Anopheles mosquitoes. Symptoms can include fever, chills, headache and tiredness. Prevention includes reducing mosquito bites and mosquito breeding sites. Anyone who may have malaria should seek prompt testing and care from a qualified health professional.'},
+  {p:/\batom\b|atomic structure|proton|neutron|electron/, a:'CHEMISTRY — ATOMIC STRUCTURE ⚛️\nAn atom is the smallest unit of an element that retains its chemical identity. The nucleus contains positively charged protons and neutral neutrons. Negatively charged electrons occupy regions around the nucleus. Atomic number = number of protons. In a neutral atom, electrons = protons. Mass number = protons + neutrons.'},
+  {p:/periodic table|periodic law|groups and periods|chemical element/, a:'CHEMISTRY — PERIODIC TABLE\nThe periodic table arranges elements in order of increasing atomic number. Horizontal rows are periods; vertical columns are groups. Elements in the same group often have similar chemical properties because they have similar outer-electron arrangements. Metals are mainly on the left and centre; non-metals are mainly on the right.'},
+  {p:/chemical bond|ionic bond|covalent bond|metallic bond/, a:'CHEMISTRY — CHEMICAL BONDING\nIonic bonding involves electron transfer and attraction between oppositely charged ions. Covalent bonding involves sharing pairs of electrons between atoms. Metallic bonding is the attraction between positive metal ions and delocalised electrons. Bonding helps explain the properties of substances.'},
+  {p:/\bacid\b|\bbase\b|\balkali\b|ph scale|neutralisation|neutralization/, a:'CHEMISTRY — ACIDS, BASES AND pH 🧪\nAn acid increases the hydrogen-ion concentration in water. An alkali is a soluble base that produces hydroxide ions in water. The pH scale is commonly shown from 0 to 14: below 7 is acidic, 7 is neutral, and above 7 is alkaline. Neutralisation occurs when an acid reacts with a base; a typical acid–alkali reaction forms salt and water.'},
+  {p:/mixture|filtration|distillation|chromatography|separation technique/, a:'CHEMISTRY — SEPARATION OF MIXTURES\n• Filtration separates an insoluble solid from a liquid.\n• Evaporation can recover a dissolved solid.\n• Crystallisation forms crystals from a solution.\n• Simple distillation can recover a solvent from a solution.\n• Fractional distillation separates miscible liquids with different boiling points.\n• Chromatography separates substances according to how they distribute between a mobile phase and a stationary phase.'},
+  {p:/states of matter|solid liquid gas|melting|boiling|freezing|evaporation/, a:'CHEMISTRY — STATES OF MATTER\nThe three common states are solid, liquid and gas. In a solid, particles are close together and vibrate about fixed positions. In a liquid, particles remain close but can move past one another. In a gas, particles are far apart and move freely. Heating can cause melting, evaporation or boiling; cooling can cause condensation or freezing.'},
+  {p:/mole concept|\bmole\b|avogadro/, a:'CHEMISTRY — THE MOLE\nA mole is an amount of substance containing approximately 6.022 × 10²³ specified particles (Avogadro constant). For many school calculations: amount in moles = mass in grams ÷ molar mass in g/mol. Always write units and check that the formula matches the question.'},
+  {p:/conservation of mass|law of conservation|balanced chemical equation/, a:'CHEMISTRY — CONSERVATION OF MASS\nIn a chemical reaction, atoms are rearranged but are not created or destroyed. Therefore, in a closed system the total mass of reactants equals the total mass of products. A balanced chemical equation has the same number of each type of atom on both sides.'},
+  {p:/electrolysis|electrolyte|electrode/, a:'CHEMISTRY — ELECTROLYSIS\nElectrolysis uses electrical energy to drive a chemical change in an electrolyte. The electrolyte contains mobile ions. Positive ions move towards the negative electrode (cathode); negative ions move towards the positive electrode (anode). The products depend on the ions present and the conditions.'},
+  {p:/\bforce\b|newton.?s laws|law of inertia|\bmotion\b/, a:'PHYSICS — FORCE AND NEWTON’S LAWS 🚀\nA force is a push or pull that can change motion or shape.\n1. First law: an object remains at rest or moves at constant velocity unless acted on by a resultant external force. This is the law of inertia.\n2. Second law: resultant force = mass × acceleration (F = ma).\n3. Third law: when two bodies interact, they exert equal and opposite forces on each other.\nForce is measured in newtons (N).'},
+  {p:/speed|velocity|acceleration|distance.?time graph/, a:'PHYSICS — MOTION\nSpeed = distance ÷ time. Velocity is speed in a specified direction. Acceleration = change in velocity ÷ time. SI units: speed in m/s and acceleration in m/s². Example: 100 m travelled in 20 s gives average speed 100 ÷ 20 = 5 m/s.'},
+  {p:/scalar|vector|vector quantity|scalar quantity/, a:'PHYSICS — SCALARS AND VECTORS\nA scalar quantity has magnitude only, such as mass, time, temperature, distance and speed. A vector quantity has both magnitude and direction, such as displacement, velocity, acceleration and force.'},
+  {p:/density/, a:'PHYSICS — DENSITY ⚖️\nDensity = mass ÷ volume. SI unit: kg/m³. Example: a mass of 200 g occupying 50 cm³ has density 200 ÷ 50 = 4 g/cm³. Keep units consistent when calculating.'},
+  {p:/pressure/, a:'PHYSICS — PRESSURE\nPressure is force acting per unit area. Formula: pressure = force ÷ area (P = F/A). SI unit: pascal (Pa), equal to one newton per square metre. For a liquid at rest, pressure increases with depth.'},
+  {p:/work done|\bpower\b|mechanical work/, a:'PHYSICS — WORK AND POWER\nWork is done when a force causes displacement in its direction. For a constant force along the direction of motion: work = force × distance. Work is measured in joules (J). Power is the rate of doing work: power = work ÷ time, measured in watts (W).'},
+  {p:/kinetic energy|potential energy|\benergy\b/, a:'PHYSICS — ENERGY ⚡\nEnergy is the capacity to do work or cause change. Kinetic energy is energy of motion: KE = ½mv². Gravitational potential energy near Earth’s surface: GPE = mgh. Energy is measured in joules (J). Energy can be transferred or transformed; in an isolated system, total energy is conserved.'},
+  {p:/heat transfer|conduction|convection|radiation|temperature/, a:'PHYSICS — HEAT TRANSFER\nConduction transfers thermal energy through a material by particle interactions; it is important in solids. Convection transfers thermal energy by the bulk movement of fluids such as liquids and gases. Radiation transfers energy by electromagnetic waves and does not require a material medium. Temperature measures how hot or cold something is.'},
+  {p:/wave|frequency|wavelength|amplitude|sound wave/, a:'PHYSICS — WAVES\nA wave transfers energy from one place to another without an overall transfer of matter. Frequency is the number of complete waves per second (hertz, Hz). Wavelength is the distance between matching points on adjacent waves. Wave speed = frequency × wavelength (v = fλ).'},
+  {p:/sound|echo|pitch|loudness/, a:'PHYSICS — SOUND\nSound is a mechanical wave produced by vibrations. It needs a medium such as air, water or a solid and cannot travel through a vacuum. Frequency is related to pitch; amplitude is related to loudness. An echo is reflected sound.'},
+  {p:/light|reflection|refraction|lens|mirror/, a:'PHYSICS — LIGHT\nLight is electromagnetic radiation visible to the human eye. Reflection is the bouncing of light from a surface; the angle of incidence equals the angle of reflection for a plane mirror. Refraction is the change in direction of light when it changes speed as it passes between media. Lenses refract light to form images.'},
+  {p:/electric current|voltage|resistance|ohm.?s law|circuit/, a:'PHYSICS — ELECTRICITY\nCurrent is the rate of flow of electric charge, measured in amperes (A). Potential difference (voltage) is measured in volts (V). Resistance is measured in ohms (Ω). Ohm’s law: V = IR for an ohmic conductor when physical conditions are constant. In a series circuit, current is the same through each component; in a parallel circuit, potential difference is the same across branches.'},
+  {p:/magnet|magnetic field|electromagnet/, a:'PHYSICS — MAGNETISM\nA magnet produces a magnetic field. Like poles repel and unlike poles attract. Magnetic field lines are drawn from north to south outside a magnet. An electromagnet uses electric current to produce a magnetic field, often strengthened by a soft iron core.'},
+  {p:/simple machine|lever|pulley|mechanical advantage|moment of a force|turning effect/, a:'PHYSICS — MACHINES AND MOMENTS\nSimple machines help make tasks easier by changing the size or direction of a force. Examples include levers, pulleys and inclined planes. Moment of a force = force × perpendicular distance from the pivot. SI unit: newton metre (N m).'},
+  {p:/parts of speech|\bnoun\b|\bverb\b|adjective|adverb|preposition|conjunction/, a:'ENGLISH — PARTS OF SPEECH 📚\n• Noun: names a person, place, thing or idea.\n• Pronoun: replaces a noun.\n• Verb: expresses an action or state.\n• Adjective: describes a noun or pronoun.\n• Adverb: modifies a verb, adjective or another adverb.\n• Preposition: shows a relationship, often of place or time.\n• Conjunction: joins words, phrases or clauses.\n• Interjection: expresses a sudden feeling.'},
+  {p:/tense|present tense|past tense|future tense/, a:'ENGLISH — TENSES\nTense shows the time of an action or state. Present: “She reads.” Past: “She read.” Future: “She will read.” Each can have simple, continuous, perfect and perfect continuous forms. Choose a tense that matches the intended time and keep it consistent unless the meaning changes.'},
+  {p:/subject verb agreement|concord/, a:'ENGLISH — SUBJECT–VERB AGREEMENT (CONCORD)\nThe verb must agree with its subject in number and person. A singular subject usually takes a singular verb: “The boy plays.” A plural subject takes a plural verb: “The boys play.” Do not let a nearby noun distract you from the real subject.'},
+  {p:/active voice|passive voice/, a:'ENGLISH — ACTIVE AND PASSIVE VOICE\nIn active voice, the subject performs the action: “The teacher marked the books.” In passive voice, the subject receives the action: “The books were marked by the teacher.” Passive voice is useful when the action or receiver is more important than the doer.'},
+  {p:/direct speech|indirect speech|reported speech/, a:'ENGLISH — DIRECT AND INDIRECT SPEECH\nDirect speech gives the speaker’s exact words in quotation marks: Ada said, “I am ready.” Indirect (reported) speech reports the meaning without quoting the exact words: Ada said that she was ready. Pronouns, time words and verb tenses may change depending on the reporting context.'},
+  {p:/simile|metaphor|personification|hyperbole|figure of speech|alliteration/, a:'ENGLISH — FIGURES OF SPEECH ✍️\n• Simile: compares using “like” or “as” — “as brave as a lion”.\n• Metaphor: describes one thing as another — “Time is a thief”.\n• Personification: gives human qualities to non-human things — “The wind whispered”.\n• Hyperbole: deliberate exaggeration.\n• Alliteration: repetition of initial consonant sounds.'},
+  {p:/synonym|antonym/, a:'ENGLISH — SYNONYMS AND ANTONYMS\nA synonym is a word with the same or a similar meaning, such as “rapid” and “quick”. An antonym is a word with an opposite meaning, such as “ancient” and “modern”. The best choice depends on context.'},
+  {p:/punctuation|comma|apostrophe|semicolon|full stop/, a:'ENGLISH — PUNCTUATION\nA full stop ends a statement. A comma separates items or marks a pause within a sentence. A question mark ends a direct question. An apostrophe shows possession or omitted letters. A colon can introduce a list or explanation; a semicolon can join closely related independent clauses.'},
+  {p:/essay writing|how to write an essay|composition/, a:'ENGLISH — ESSAY WRITING\nA clear essay usually has an introduction, body paragraphs and a conclusion. The introduction presents the topic and main idea. Each body paragraph develops one point with explanation or examples. The conclusion brings the main ideas together. Plan first, use clear paragraphs, check grammar and stay on the assigned topic.'},
+  {p:/formal letter|informal letter|letter writing/, a:'ENGLISH — LETTER WRITING\nA formal letter usually includes the sender’s address and date, recipient’s address, salutation, clear subject or purpose, organised paragraphs, appropriate closing and signature. An informal letter uses a friendly tone for someone you know. Always follow the format your teacher or examination board requires.'},
+  {p:/\bhtml\b|hypertext markup/, a:'CODING — HTML BASICS 💻\nHTML means HyperText Markup Language. It provides the structure of a webpage. Example:\n\n<!doctype html>\n<html>\n<head><title>My page</title></head>\n<body>\n  <h1>Hello world</h1>\n  <p>My first webpage.</p>\n</body>\n</html>\n\nSave the file with a .html extension and open it in a browser. Tags describe elements; many elements have an opening tag and a closing tag.'},
+  {p:/\bcss\b|cascading style/, a:'CODING — CSS BASICS 🎨\nCSS means Cascading Style Sheets. It controls a webpage’s appearance: colours, fonts, spacing and layout. Example:\n\nbody { background: #111; color: white; }\nh1 { color: gold; }\n\nA selector chooses which elements to style. Declarations inside braces set properties and values. CSS can be placed in a style element or a separate .css file.'},
+  {p:/javascript|java script|\bjs\b/, a:'CODING — JAVASCRIPT BASICS ⚙️\nJavaScript adds behaviour and interactivity to webpages. Example:\n\nconst name = "ALPHA";\nfunction greet() {\n  return "Hello " + name;\n}\n\nA variable stores a value. A function groups reusable instructions. JavaScript is not the same language as Java.'},
+  {p:/\bpython\b/, a:'CODING — PYTHON BASICS\nPython is a general-purpose programming language with readable syntax. Example:\n\nname = "ALPHA"\nprint("Hello", name)\n\nVariables store values. Indentation defines code blocks. Python is used in automation, data work, education, web development and many other areas.'},
+  {p:/programming variable|variables in programming|\bvariable\b/, a:'CODING — VARIABLES\nA variable is a named place in a program where a value can be stored. In JavaScript: let score = 10; changes the value later, while const name = "Ada" creates a binding that cannot be reassigned. Choose clear names and use the right data type.'},
+  {p:/\bloop\b|for loop|while loop|iteration/, a:'CODING — LOOPS\nA loop repeats a block of code. A for loop is useful when you know the sequence or number of repetitions. A while loop repeats while a condition remains true. Make sure the condition can eventually become false, or the program may loop forever.'},
+  {p:/function in programming|functions in javascript|\bfunction\b/, a:'CODING — FUNCTIONS\nA function is a reusable block of code that performs a task. It can accept inputs called parameters and may return a result. Example in JavaScript: function add(a, b) { return a + b; }. Calling add(2, 3) returns 5.'},
+  {p:/array|list in programming/, a:'CODING — ARRAYS AND LISTS\nAn array (or list in some languages) stores multiple values in an ordered collection. In JavaScript: const subjects = ["Maths", "Biology", "English"]; The first item is at index 0. Arrays make it easier to loop through and manage related data.'},
+  {p:/debug|bug in code|error in my code/, a:'CODING — DEBUGGING\nDebugging is the process of finding and fixing errors in a program. Read the exact error message, identify the line, check spelling and brackets, inspect variable values, and test one small change at a time. If you paste your code and the error message, I can help inspect it offline only if the issue matches built-in guidance.'},
+  {p:/responsive website|mobile friendly|media query/, a:'CODING — RESPONSIVE WEB DESIGN\nResponsive design makes a website adapt to different screen sizes. Use a flexible layout, relative units where suitable, images that do not overflow, and CSS media queries. Example: @media (max-width: 600px) { .menu { display: block; } }. Test on both narrow and wide screens.'},
+  {p:/computer|computer system|input process output|hardware|software/, a:'COMPUTER STUDIES — COMPUTER SYSTEM\nA computer is an electronic device that accepts data, processes it according to instructions, stores it and produces information. The basic cycle is input → processing → output, with storage used to keep data and results. Hardware is the physical equipment; software is the programs and instructions.'},
+  {p:/internet|world wide web|\bwww\b|browser|search engine/, a:'GENERAL KNOWLEDGE — INTERNET AND THE WEB\nThe internet is a worldwide network of connected devices. The World Wide Web is a service that runs on the internet and uses linked webpages. A browser opens webpages; a search engine helps locate information. A URL is a web address.'},
+  {p:/artificial intelligence|\bai\b|machine learning/, a:'GENERAL KNOWLEDGE — ARTIFICIAL INTELLIGENCE\nArtificial intelligence (AI) is a field of computing that develops systems for tasks such as recognising patterns, understanding language, making predictions and generating content. Machine learning is one approach in which systems learn patterns from data. AI can make mistakes or invent details, so verify important information.'},
+  {p:/democracy|democratic government/, a:'CIVIC EDUCATION — DEMOCRACY\nDemocracy is a system of government in which people exercise political power directly or through elected representatives. Common features include participation, regular elections, rule of law, accountability and protection of rights. Democratic systems differ between countries.'},
+  {p:/capital of nigeria|\bnigeria\b|36 states/, a:'GENERAL KNOWLEDGE — NIGERIA 🇳🇬\nNigeria is a country in West Africa. Its capital is Abuja. It has 36 states and the Federal Capital Territory. Its currency is the naira. Nigeria became independent on 1 October 1960. This offline fact sheet is not a live news source.'},
+  {p:/continent|continents of the world|largest continent/, a:'GEOGRAPHY — CONTINENTS\nA common school model recognises seven continents: Africa, Antarctica, Asia, Europe, North America, South America and Australia. Asia is the largest by area. Africa is the second-largest. Some educational systems use different continent models.'},
+  {p:/solar system|planets|planet order/, a:'SCIENCE — THE SOLAR SYSTEM 🌞\nThe Solar System contains the Sun, eight recognised planets, dwarf planets, moons, asteroids, comets and smaller objects held by the Sun’s gravity. The planets in order from the Sun are Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune.'},
+  {p:/water cycle|hydrological cycle/, a:'GEOGRAPHY — WATER CYCLE\nThe water cycle is the continuous movement of water between Earth’s surface and the atmosphere. Main stages include evaporation, transpiration, condensation, precipitation, infiltration and runoff. Solar energy drives much of the cycle.'},
+  {p:/climate change|global warming|greenhouse effect/, a:'GEOGRAPHY — CLIMATE CHANGE\nClimate change means long-term changes in temperatures and weather patterns. Recent global warming is mainly caused by human activities that increase greenhouse gases, especially burning fossil fuels and land-use changes. Possible effects include sea-level rise and changes in heat, rainfall and extreme-weather risks.'},
+  {p:/world war one|first world war|world war 1/, a:'HISTORY — WORLD WAR I\nWorld War I lasted from 1914 to 1918. The assassination of Archduke Franz Ferdinand in June 1914 was the immediate trigger. Wider causes included militarism, alliance systems, imperial competition and nationalism. The war involved many countries and reshaped international politics.'},
+  {p:/world war two|second world war|world war 2/, a:'HISTORY — WORLD WAR II\nWorld War II lasted from 1939 to 1945 and involved countries across the world. In Europe, it began after Nazi Germany invaded Poland in September 1939. The war ended in 1945 after Germany and Japan surrendered. It caused enormous loss and led to major changes in international institutions and borders.'},
+  {p:/study method|how to study|exam preparation|revision tips/, a:'STUDY SKILLS 📖\n1. Choose one topic and set a small goal.\n2. Read a short section carefully.\n3. Close your notes and explain the idea in your own words.\n4. Practise questions without looking at the answer.\n5. Check mistakes and revise the parts you missed.\n6. Take breaks and keep a regular sleep routine.\nActive recall and spaced revision are useful learning methods.'}
+];
+function normalise(text) { return text.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, ' ').trim(); }
+function topicReply(message) {
+  const m=normalise(message);
+  const found=OFFLINE_TOPICS.find(item=>item.p.test(m));
+  return found ? found.a : null;
+}
+function offlineReply(message) {
+  const m=normalise(message);
+  if (/^(hi|hello|hey|good morning|good afternoon|good evening)\b/.test(m)) return 'Hello! I’m ALPHA AI, running in OFFLINE KNOWLEDGE MODE. I can help with prepared lessons, maths calculations, selected algebra, school subjects and beginner coding. Ask me a question to begin.';
+  if (/\b(who are you|what is your name|your name)\b/.test(m)) return 'I’m ALPHA AI, your offline learning assistant. I use a built-in knowledge library and tools stored inside this HTML file. I do not connect to Gemini or the internet in this edition.';
+  if (/\b(what time|what date|today)\b/.test(m)) return 'Your device date and time: ' + new Date().toLocaleString() + '. This comes from your phone clock.';
+  if (/\b(thank|thanks)\b/.test(m)) return 'You’re welcome! Keep asking questions and learning.';
+  if (/\b(help|what can you do|topics can you answer)\b/.test(m)) return 'I can answer selected offline questions in Mathematics, Biology, Chemistry, Physics, English, Computer Studies, coding, geography, history, civic education and general science. I can calculate arithmetic, solve some one-variable linear equations, and explain school concepts. I cannot know every question or check live facts without an online AI/search connection.';
+  if (/\b(explain more|tell me more|more details|give examples|give me examples|make it simpler|summarise|summarize)\b/.test(m)) {
+    const previous=[...currentChat.messages].reverse().find(x=>x.role==='user');
+    const previousTopic=previous ? topicReply(previous.content) : null;
+    if (previousTopic) return previousTopic + '\n\nWould you like a worked example or a short practice question on this topic?';
+  }
+  const math=mathReply(message);
+  if (math) return math;
+  const topic=topicReply(message);
+  if (topic) return topic;
+  if (/\b(math|mathematics|algebra|equation|calculate|solve|fraction|percentage)\b/.test(m)) return 'MATHEMATICS HELP 🧮\nI can calculate arithmetic using brackets, decimals, +, −, ×, ÷ and powers. I can also solve some linear equations in x.\nExamples to try:\n• What is (18 + 6) ÷ 3?\n• Calculate 25% of 240.\n• Solve 2x + 3 = 11.\nFor geometry, trigonometry or longer word problems, I have selected explanations only in this offline edition.';
+  if (/\b(biology|chemistry|physics|english|science|geography|history|coding|programming)\b/.test(m)) return 'I have some built-in lessons for that subject, but not every chapter yet. Try asking for a specific topic, such as “Explain the human heart”, “What is ionic bonding?”, “Explain pressure in Physics”, “What is a metaphor?” or “Teach me JavaScript functions”.';
+  return 'I don’t have a reliable built-in answer for that exact question yet. This version works offline and uses prepared lessons, so it cannot know every fact or answer every possible question. Try asking about a specific school topic, maths calculation, science concept, English topic or beginner coding lesson. In Phase A, we can connect an online AI service for much broader answers.';
+}
 
-      const question = input.value.trim();
-      if (!question) return;
+async function sendMessage(text) {
+  text = text.trim();
+  if (!text || busy) return;
+  welcome.style.display = 'none';
+  addMessage('user', text);
+  input.value = '';
+  input.style.height = 'auto';
+  setBusy(true);
+  const bubble = addMessage('assistant', 'ALPHA AI is thinking…', false);
+  bubble.innerHTML = '<span class="thinking">ALPHA AI is thinking…</span>';
+  try {
+    let answer = '';
+    let online = false;
+    // The local HTML file cannot run the server API; deployed Vercel hosting can.
+    if (location.protocol === 'https:' || location.protocol === 'http:') {
+      try {
+        const history = currentChat.messages.slice(0, -1).slice(-10).map(m => ({
+          role: m.role === 'assistant' ? 'model' : 'user', content: m.content
+        }));
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 25000);
+        const response = await fetch('/api/chat', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, history }), signal: controller.signal
+        });
+        clearTimeout(timer);
+        const data = await response.json();
+        if (!response.ok || !data.answer) throw new Error(data.error || 'Online AI is unavailable.');
+        answer = data.answer;
+        online = true;
+      } catch (networkError) {
+        answer = offlineReply(text);
+      }
+    } else {
+      await new Promise(resolve => setTimeout(resolve, 180));
+      answer = offlineReply(text);
+    }
+    bubble.textContent = answer;
+    currentChat.messages.push({ role: 'assistant', content: answer });
+    saveChats();
+    setMode(online ? 'Connected to Gemini online AI' : 'Offline prepared-answer backup', online);
+  } catch (err) {
+    bubble.textContent = 'Sorry, I could not create a reply. Please try again.';
+  } finally {
+    setBusy(false);
+    input.focus();
+  }
+}
+form.addEventListener('submit', e => { e.preventDefault(); sendMessage(input.value); });
+input.addEventListener('input', () => {
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 150) + 'px';
+});
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+});
+document.querySelectorAll('.suggestion').forEach(btn => btn.addEventListener('click', () => sendMessage(btn.dataset.prompt)));
+document.getElementById('newChat').addEventListener('click', newChat);
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const text = currentChat.messages.map(m => (m.role === 'user' ? 'YOU' : 'ALPHA AI') + ':\n' + m.content).join('\n\n');
+  if (!text) { showToast('There is no conversation to export yet.'); return; }
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'alpha-ai-conversation.txt'; a.click();
+  URL.revokeObjectURL(url); showToast('Conversation exported.');
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (currentChat.messages.length && !confirm('Start a new conversation? Your saved history will remain.')) return;
+  newChat();
+});
+document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+renderHistory();
+if (location.protocol === 'file:') setMode('Offline knowledge library', false);
+else setMode('Online AI + offline backup', false);
 
-      addMessage(question, "user");
-      input.value = "";
-
-      addMessage(
-        "Your chat interface is working! 🤖 I still need to be connected to an AI service before I can generate real answers. We're building that next!",
-        "bot"
-      );
-    });
-  </script></body>
+  </script>
+</body>
 </html>
